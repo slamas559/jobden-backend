@@ -2,6 +2,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 from app.core.config import settings
+import ssl
+
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 DATABASE_URL = settings.DATABASE_URL
 
@@ -25,6 +30,7 @@ engine = create_async_engine(
     max_overflow=10,
     pool_recycle=3600,  # Recycle connections after 1 hour
     connect_args={
+        "ssl":ssl_context,
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
     }

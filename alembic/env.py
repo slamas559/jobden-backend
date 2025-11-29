@@ -11,9 +11,14 @@ from app.models.job_seeker_profile import JobSeekerProfile
 from app.models.job import Job
 from app.models.application import Application
 from app.core.config import settings
+import ssl
 
 from dotenv import load_dotenv
 load_dotenv()
+
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 # this is the Alembic Config object
 config = context.config
@@ -41,6 +46,7 @@ async def run_migrations_online():
         url,
         poolclass=pool.NullPool,
         connect_args={
+        "ssl":ssl_context,
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
     }
