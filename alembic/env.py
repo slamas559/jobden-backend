@@ -11,20 +11,21 @@ from app.models.employer_profile import EmployerProfile
 from app.models.job_seeker_profile import JobSeekerProfile
 from app.models.job import Job
 from app.models.application import Application
+from app.core.config import settings
 
 from dotenv import load_dotenv
 load_dotenv()
 
 # this is the Alembic Config object
 config = context.config
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+config.set_main_option("sqlalchemy.url", str(settings.DATABASE_URL))
 # Interpret the config file for Python logging.
 fileConfig(config.config_file_name)
 # url = os.getenv("DATABASE_URL")
 target_metadata = Base.metadata
 
 def run_migrations_offline():
-    url = config.get_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
     with context.begin_transaction():
         context.run_migrations()
@@ -35,7 +36,7 @@ def do_run_migrations(connection):
         context.run_migrations()
 
 async def run_migrations_online():
-    url = config.get_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+    url = config.get_main_option("sqlalchemy.url")
     print(f"DEBUG: Database URL = {url}")  # Add this line
     connectable = create_async_engine(
         url,
