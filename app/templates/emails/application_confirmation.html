@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Confirmed</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: #ffffff; padding: 40px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .content { padding: 40px 30px; }
+        .job-details { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #28a745; }
+        .job-details h3 { margin-top: 0; color: #28a745; }
+        .button { display: inline-block; padding: 12px 30px; background: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .button:hover { background: #218838; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #6c757d; }
+        .success-icon { font-size: 48px; text-align: center; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Application Submitted! ✓</h1>
+        </div>
+        <div class="content">
+            <div class="success-icon">🎉</div>
+            <h2>Hello {{ applicant_name }}!</h2>
+            <p>Great news! Your application has been successfully submitted.</p>
+            
+            <div class="job-details">
+                <h3>Application Details:</h3>
+                <p><strong>Position:</strong> {{ job_title }}</p>
+                <p><strong>Company:</strong> {{ company_name }}</p>
+                <p><strong>Application ID:</strong> #{{ application_id }}</p>
+            </div>
+            
+            <h3>What happens next?</h3>
+            <p>The employer will review your application and may reach out to you directly. We'll keep you updated on any changes to your application status.</p>
+            
+            <p>You can track your application status anytime from your dashboard.</p>
+            
+            <p style="text-align: center;">
+                <a href="{{ app_url }}/applications" class="button">View My Applications</a>
+            </p>
+            
+            <p>Good luck! We're rooting for you! 🍀</p>
+            
+            <p>Best regards,<br>The JobSearch Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 JobSearch Platform. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
