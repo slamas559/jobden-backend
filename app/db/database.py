@@ -20,6 +20,11 @@ if DATABASE_URL:
     if "?pgbouncer=true" in DATABASE_URL:
         DATABASE_URL = DATABASE_URL.replace("?pgbouncer=true", "")
 
+if "?" in DATABASE_URL:
+    DATABASE_URL += "&statement_cache_size=0"
+else:
+    DATABASE_URL += "?statement_cache_size=0"
+
 print(f"DEBUG: Database URL = {DATABASE_URL[:50]}..." if DATABASE_URL else "No DATABASE_URL")
 
 engine = create_async_engine(
@@ -32,7 +37,6 @@ engine = create_async_engine(
     connect_args={
         "ssl":ssl_context,
         "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
     }
 )
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

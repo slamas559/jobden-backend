@@ -41,6 +41,10 @@ def do_run_migrations(connection):
 
 async def run_migrations_online():
     url = config.get_main_option("sqlalchemy.url")
+    if "?" in url:
+        url += "&statement_cache_size=0"
+    else:
+        url += "?statement_cache_size=0"
     print(f"DEBUG: Database URL = {url}")  # Add this line
     connectable = create_async_engine(
         url,
@@ -48,7 +52,6 @@ async def run_migrations_online():
         connect_args={
         "ssl":ssl_context,
         "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
     }
     )
 
