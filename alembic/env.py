@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from alembic import context
 import asyncio
 import os
-from app.db.database import Base
+from app.db.database import engine, Base
 from app.models.user import User
 from app.models.employer_profile import EmployerProfile
 from app.models.job_seeker_profile import JobSeekerProfile
@@ -41,23 +41,10 @@ def do_run_migrations(connection):
 
 async def run_migrations_online():
     url = config.get_main_option("sqlalchemy.url")
-    if "?" in url:
-        url += "&statement_cache_size=0"
-    else:
-        url += "?statement_cache_size=0"
-    print(f"DEBUG: Database URL = {url}")  # Add this line
-    connectable = create_async_engine(
-        url,
-        poolclass=pool.NullPool,
-        connect_args={
-        "ssl":ssl_context,
-        "statement_cache_size": 0,
-    }
-    )
-
-    async with connectable.connect() as connection:
+    
+    async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
+    await engine.dispose()
 
 if context.is_offline_mode():
     run_migrations_offline()
