@@ -1,52 +1,46 @@
 from logging.config import fileConfig
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy import engine_from_config, pool
 from alembic import context
-import asyncio
-import os
 from app.db.database import engine, Base
-from app.models.user import User
-from app.models.employer_profile import EmployerProfile
-from app.models.job_seeker_profile import JobSeekerProfile
-from app.models.job import Job
-from app.models.application import Application
 from app.core.config import settings
-import ssl
+import os
 
-from dotenv import load_dotenv
-load_dotenv()
-
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
-
-# this is the Alembic Config object
+# Alembic Config
 config = context.config
 config.set_main_option("sqlalchemy.url", str(settings.DATABASE_URL))
-# Interpret the config file for Python logging.
+
+# Logging
 fileConfig(config.config_file_name)
-# url = os.getenv("DATABASE_URL")
+
+# metadata
 target_metadata = Base.metadata
 
+
 def run_migrations_offline():
+    """Run migrations in offline mode."""
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+    )
+
     with context.begin_transaction():
         context.run_migrations()
 
-def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
-    with context.begin_transaction():
-        context.run_migrations()
 
-async def run_migrations_online():
-    url = config.get_main_option("sqlalchemy.url")
-    
-    async with engine.connect() as connection:
-        await connection.run_sync(do_run_migrations)
-    await engine.dispose()
+def run_migrations_online():
+    """Run migrations in online/sync mode."""
+    connectable = engine  # your existing sync engine
+
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
+
+        with context.begin_transaction():
+            context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    asyncio.run(run_migrations_online())
+    run_migrations_online()
