@@ -10,8 +10,12 @@ import uuid
 DATABASE_URL = settings.DATABASE_URL
 
 # Fix Protocol
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+
 
 # Handle SSL
 ssl_context = ssl.create_default_context()
@@ -20,16 +24,15 @@ ssl_context.verify_mode = ssl.CERT_NONE
 
 print(f"FINAL DATABASE URL: {DATABASE_URL}")
 # Create Engine
-engine = create_engine(
+engine = create_async_engine(
     DATABASE_URL,
     future=True,
     poolclass=NullPool,
     echo=False,
-    # connect_args={
-    #     "statement_cache_size": 0, # This is the only place you need it
-    #     # "prepared_statement_name_func": lambda: f"__asyncpg_{uuid.uuid4()}__",
-    #     "ssl": ssl_context,
-    # }
+    connect_args={
+        "statement_cache_size": 0, # This is the only place you need it
+        "ssl": ssl_context,
+    }
 )
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
