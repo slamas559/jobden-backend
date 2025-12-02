@@ -14,7 +14,7 @@ load_dotenv()
 REDIS_URL = settings.REDIS_URL or os.getenv("REDIS_URL")
 
 # Initialize Redis client
-if REDIS_URL and REDIS_URL.startswith("rediss://"):
+if REDIS_URL and REDIS_URL.startswith("redis://"):
     # Upstash Redis (with SSL)
     redis_client = redis.from_url(
         REDIS_URL,
