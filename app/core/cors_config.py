@@ -7,26 +7,20 @@ load_dotenv()
 
 # CORS Configuration
 def get_cors_origins():
-    """
-    Get allowed CORS origins from environment
-    
-    Returns:
-        List of allowed origins
-    """
-    # Get from environment or use defaults
-    origins = settings.BACKEND_CORS_ORIGINS or os.getenv(
-        "BACKEND_CORS_ORIGINS",
-        "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000"
-    )
+    env_origins = settings.BACKEND_CORS_ORIGINS
 
-    
-    # Split by comma and strip whitespace
-    # origins = [origin.strip() for origin in origins_str.split(",")]
-    
-    # If in development, allow all origins
-    if settings.ENVIRONMENT == "development" or os.getenv("ENVIRONMENT", "development") == "development":
-        origins.append("http://localhost:*")
-    print(origins)
+    # If Pydantic parsed into AnyHttpUrl list, convert to strings
+    if isinstance(env_origins, list):
+        origins = [str(origin).rstrip("/") for origin in env_origins]
+    else:
+        # If string, split by comma
+        origins = [o.strip() for o in env_origins.split(",")]
+
+    # Add wildcard localhost only in dev
+    if settings.ENVIRONMENT == "development":
+        origins.append("http://localhost")
+
+    print("Final Origins:", origins)
     return origins
 
 
