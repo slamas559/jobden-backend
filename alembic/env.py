@@ -32,6 +32,9 @@ def run_migrations_online():
     connectable = create_engine(
         sync_url,
         poolclass=pool.NullPool,     # REQUIRED for pgBouncer
+        connect_args={
+            "prepared_statement_cache_size": 0   # <-- FIX for psycopg
+        }
     )
 
     with connectable.connect() as connection:
