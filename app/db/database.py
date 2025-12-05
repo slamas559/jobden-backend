@@ -24,13 +24,16 @@ ssl_context.verify_mode = ssl.CERT_NONE
 
 print(f"FINAL DATABASE URL: {DATABASE_URL}")
 # Create Engine
+
 engine = create_async_engine(
     DATABASE_URL,
     future=True,
     poolclass=NullPool,
     echo=False,
     connect_args={
+        "prepared_statement_name_func": lambda: f"__asyncpg_{uuid.uuid4()}__",
         "statement_cache_size": 0, # This is the only place you need it
+        "prepared_statement_cache_size": 0,
         "ssl": ssl_context,
     }
 )

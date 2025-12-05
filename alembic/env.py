@@ -9,6 +9,7 @@ from app.models.employer_profile import EmployerProfile
 from app.models.job_seeker_profile import JobSeekerProfile
 from app.models.job import Job
 from app.models.application import Application
+import uuid
 
 config = context.config
 sync_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://")
@@ -32,7 +33,11 @@ def run_migrations_online():
     connectable = create_engine(
         sync_url,
         poolclass=pool.NullPool,     # REQUIRED for pgBouncer
-        prepared_statement_cache_size= 0   # <-- FIX for psycopg
+        connect_args={
+            "prepared_statement_name_func": lambda: f"__asyncpg_{uuid.uuid4()}__",
+            "statement_cache_size": 0, # This is the only place you need it
+            "prepared_statement_cache_size": 0,
+        }
     )
 
     with connectable.connect() as connection:
