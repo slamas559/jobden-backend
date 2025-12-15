@@ -149,6 +149,7 @@ async def get_my_applications(
     return applications
 
 
+
 @router.get("/{application_id}", response_model=ApplicationWithDocuments)
 async def get_application(
     application_id: int,
@@ -212,6 +213,17 @@ async def update_application(
     
     return updated_application
 
+@router.get("/check/{job_id}")
+async def check_application_status(
+    job_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Check if a job is bookmarked"""
+    is_applied = await application_service.is_job_applied(
+        db, current_user.id, job_id
+    )
+    return {"is_applied": is_applied}
 
 @router.post("/{application_id}/withdraw", response_model=ApplicationWithDocuments)
 async def withdraw_application(

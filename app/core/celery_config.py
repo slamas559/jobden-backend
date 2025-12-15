@@ -16,8 +16,8 @@ if REDIS_URL and REDIS_URL.startswith("rediss://"):
     result_backend = REDIS_URL
 else:
     # Local Redis (no SSL)
-    broker_url = settings.CELERY_BROKER_URL or "redis://localhost:6379/0"
-    result_backend = settings.CELERY_RESULT_BACKEND or "redis://localhost:6379/0"
+    broker_url = settings.CELERY_BROKER_URL
+    result_backend = settings.CELERY_RESULT_BACKEND
 
 print(f"DEBUG: Celery broker = {broker_url[:30]}..." if broker_url else "No broker URL")
 

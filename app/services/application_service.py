@@ -117,6 +117,14 @@ async def withdraw_application(
     await db.refresh(application)
     return application
 
+async def is_job_applied(
+    db: AsyncSession,
+    user_id: int,
+    job_id: int
+) -> bool:
+    """Check if a job is applied by the user"""
+    application = await get_application_by_user_and_job(db, user_id, job_id)
+    return application is not None
 
 async def delete_application(
     db: AsyncSession,

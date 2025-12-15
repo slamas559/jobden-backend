@@ -100,6 +100,6 @@ async def update_job(
 
 
 async def delete_job(db: AsyncSession, job: Job) -> None:
-    """Delete a job (soft delete by setting is_active to False)"""
-    job.is_active = False
+    """Delete a job (delete completely from database)"""
+    await db.delete(job)
     await db.commit()

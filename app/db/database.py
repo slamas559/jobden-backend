@@ -22,7 +22,7 @@ ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
-print(f"FINAL DATABASE URL: {DATABASE_URL}")
+# print(f"FINAL DATABASE URL: {DATABASE_URL}")
 # Create Engine
 
 engine = create_async_engine(
