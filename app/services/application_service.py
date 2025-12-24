@@ -17,11 +17,17 @@ async def create_application(
     application_data: ApplicationCreate
 ) -> Application:
     """Create a new job application"""
+    app_dict = application_data.model_dump()  
+    # Convert question_answers to JSON
+    if app_dict.get('question_answers'):
+        app_dict['question_answers'] = [
+            q.model_dump() for q in application_data.question_answers
+        ]
+
     application = Application(
         user_id=user_id,
-        job_id=application_data.job_id,
-        cover_letter=application_data.cover_letter,
-        status="pending"
+        **app_dict
+        
     )
     db.add(application)
     await db.commit()

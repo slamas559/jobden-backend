@@ -5,8 +5,13 @@ from typing import Optional, List
 from app.schemas.job import JobRead
 
 
+class QuestionAnswer(BaseModel):
+    question_id: str
+    question: str
+    answer: str
+
 class ApplicationDocumentBase(BaseModel):
-    document_type: str  # "resume", "cover_letter", "portfolio", "certificate"
+    document_type: str
     document_url: str
     file_name: str
 
@@ -21,10 +26,11 @@ class ApplicationDocumentRead(ApplicationDocumentBase):
 class ApplicationCreate(BaseModel):
     job_id: int
     cover_letter: Optional[str] = None
+    question_answers: Optional[List[QuestionAnswer]] = None  # NEW
 
 class ApplicationUpdate(BaseModel):
     cover_letter: Optional[str] = None
-    status: Optional[str] = None  # For job seekers, they can only set to "withdrawn"
+    status: Optional[str] = None
 
 class ApplicationRead(BaseModel):
     id: int
@@ -34,6 +40,7 @@ class ApplicationRead(BaseModel):
     status: str
     applied_at: datetime
     updated_at: datetime
+    question_answers: Optional[List[QuestionAnswer]] = None  # NEW
 
     class Config:
         from_attributes = True

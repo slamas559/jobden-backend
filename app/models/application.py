@@ -1,5 +1,5 @@
 # app/models/application.py
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, Text, String
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Text, String, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.db.database import Base
@@ -14,6 +14,16 @@ class Application(Base):
     status = Column(String, default="pending")  # pending, reviewed, accepted, rejected, withdrawn
     applied_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # NEW: Store answers to custom questions as JSON
+    question_answers = Column(JSON, nullable=True, default=list)
+    # Format: [
+    #   {
+    #     "question_id": "q1",
+    #     "question": "Why are you interested in this position?",
+    #     "answer": "I am passionate about..."
+    #   }
+    # ]
 
     # Relationships
     user = relationship("User", back_populates="applications")

@@ -1,4 +1,5 @@
 # app/services/job_service.py
+from datetime import datetime
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
@@ -13,15 +14,17 @@ async def create_job(
     job_data: JobCreate
 ) -> Job:
     """Create a new job posting"""
+    job_dict = job_data.model_dump()  
+
+    # Convert custom_questions to JSON
+    if job_dict.get('custom_questions'):
+        job_dict['custom_questions'] = [
+            q.model_dump() for q in job_data.custom_questions
+        ]
+
     job = Job(
         employer_id=employer_id,
-        title=job_data.title,
-        description=job_data.description,
-        location=job_data.location,
-        salary=job_data.salary,
-        job_type=job_data.job_type,
-        requirements=job_data.requirements,
-        is_active=job_data.is_active
+        **job_dict
     )
     db.add(job)
     await db.commit()

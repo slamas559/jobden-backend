@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Float, Integer, String, ForeignKey, Text, Boolean, DateTime
+# app/models/job.py
+from sqlalchemy import Column, Float, Integer, String, ForeignKey, Text, Boolean, DateTime, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.db.database import Base
@@ -15,6 +16,18 @@ class Job(Base):
     requirements = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # NEW: Custom application questions stored as JSON
+    custom_questions = Column(JSON, nullable=True, default=list)
+    # Format: [
+    #   {
+    #     "id": "q1",
+    #     "type": "short_answer",  # or "multiple_choice", "yes_no"
+    #     "question": "Why are you interested in this position?",
+    #     "required": true,
+    #     "options": []  # for multiple_choice type
+    #   }
+    # ]
 
     employer_id = Column(Integer, ForeignKey("employer_profiles.id"))
     employer = relationship("EmployerProfile", back_populates="jobs")
