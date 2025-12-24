@@ -114,7 +114,7 @@ async def get_my_jobs(
         limit=limit,
         active_only=active_only
     )    
-    return jobs,
+    return jobs
 
 
 @router.get("/jobs/{job_id}/applicants")
