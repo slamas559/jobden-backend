@@ -49,7 +49,13 @@ async def list_jobs(
         min_salary=min_salary,
         search=search
     )
+    # Return the jobs with the profile of the employer included
+    # This can be done in the job_service.get_jobs method if needed
+    # for job in jobs:
+    #     job.employer_profile = await employer_service.get_employer_profile_by_id(db, job.employer_id)  
+    
     return jobs
+
 
 
 @router.get("/{job_id}", response_model=JobRead)

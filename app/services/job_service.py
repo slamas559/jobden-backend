@@ -78,7 +78,6 @@ async def get_jobs(
                 Job.requirements.ilike(search_pattern)
             )
         )
-    
     # Apply pagination and ordering
     stmt = stmt.offset(skip).limit(limit).order_by(Job.created_at.desc())
     

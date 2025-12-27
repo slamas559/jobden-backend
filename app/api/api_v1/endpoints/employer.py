@@ -52,6 +52,19 @@ async def get_my_employer_profile(
     """Get current employer's profile"""
     return profile
 
+@router.get("/profile/{profile_id}", response_model=EmployerProfileRead)
+async def get_employer_profile_by_id(
+    profile_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    """Get employer profile by profile ID"""
+    profile = await employer_service.get_employer_profile_by_id(db, profile_id)
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Employer profile not found"
+        )
+    return profile
 
 @router.put("/profile", response_model=EmployerProfileRead)
 async def update_my_employer_profile(
